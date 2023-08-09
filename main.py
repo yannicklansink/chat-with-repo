@@ -12,8 +12,13 @@ from langchain.schema import (
     SystemMessage
 )
 from langchain.chat_models import ChatOpenAI
+import openai
+import inspect
 from langchain.callbacks.base import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
+
+
 
 load_dotenv()
 
@@ -21,8 +26,23 @@ supabase_url = os.environ.get("SUPABASE_URL")
 supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
 supabase: Client = create_client(supabase_url, supabase_key)
 
-embeddings = OpenAIEmbeddings()
 
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-ada-002" # Expliciet aangegeven.
+)
+
+# list models
+models = openai.Model.list()
+# print the first model's id
+print(models.data[0].id + " d ")
+
+print(embeddings.openai_api_key)
+print(embeddings.model)
+
+# An instance of SupabaseVectorStore is created, 
+# which appears to be designed to interact 
+# with a Supabase table and manage vectors, 
+# probably generated from the aforementioned embeddings.
 vector_store = SupabaseVectorStore(
     supabase, 
     embeddings, 
